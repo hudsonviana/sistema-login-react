@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useContext } from 'react';
+import './App.css';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { AuthContext } from './contexts/Auth/AuthContext';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    navigate('/private');
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <header>
+        <h1>Header do site</h1>
+        <nav>
+          <Link to={'/'}>Home</Link>
+          <Link to={'/private'}>Página privada</Link>
+          {auth.user && <button onClick={handleLogout}>Sair</button>}
+        </nav>
+      </header>
 
-export default App
+      <Outlet />
+    </div>
+  );
+};
+
+export default App;
